@@ -5,8 +5,8 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 export class AuthService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async signUp(authCredentials: AuthCredentialsDto): Promise<void> {
-    const user = this.userRepository.create(authCredentials);
-    await user.save();
+  async signUp(authCredentials: AuthCredentialsDto) {
+    const user = await this.userRepository.saveUser(authCredentials);
+    return user;
   }
 }
