@@ -20,8 +20,13 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatusValidationPipe } from './pipes/tast-status-validation.pipe';
 import { GetFilteredTaskDto } from './dto/get-filtered-task.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/user.entity';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { Serialize } from '../../interceptors/serialize.interceptor';
+import { TaskDto } from './dto/response/task.dto';
 
 @UseGuards(AuthGuard())
+@Serialize(TaskDto)
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
@@ -29,32 +34,40 @@ export class TasksController {
   @Get()
   getTasks(
     @Query(ValidationPipe) filteredTask: GetFilteredTaskDto,
+    @CurrentUser() user: User,
   ): Promise<Task[]> {
-    return this.taskService.getTasks(filteredTask);
+    return this.taskService.getTasks(filteredTask, user);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  createTask(@Body() newTask: CreateTaskDto): Promise<Task> {
-    return this.taskService.createTask(newTask);
+  createTask(
+    @Body() newTask: CreateTaskDto,
+    @CurrentUser() user: User,
+  ): Promise<Task> {
+    return this.taskService.createTask(newTask, user);
   }
 
   @Get('/:id')
-  getTaskById(@Param('id', ParseIntPipe) id: number): Promise<Task> {
-    return this.taskService.getTaskById(id);
+  getTaskById(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ): Promise<Task> {
+    return this.taskService.getTaskById(id, user);
   }
 
   @HttpCode(204)
   @Delete('/:id')
-  deleteTask(@Param('id', ParseIntPipe) id: number) {
-    this.taskService.deleteTask(id);
+  deleteTask(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
+    return this.taskService.deleteTask(id, user);
   }
 
   @Patch('/:id/status')
   updateStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+    @CurrentUser() user: User,
   ): Promise<Task> {
-    return this.taskService.updateStatus(id, status);
+    return this.taskService.updateStatus(id, status, user);
   }
 }

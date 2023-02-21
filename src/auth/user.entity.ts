@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import { Task } from 'src/tasks/task.entity';
 import {
   BaseEntity,
   Column,
@@ -6,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -17,6 +19,9 @@ export class User extends BaseEntity {
   username: string;
   @Column()
   password: string;
+
+  @OneToMany(() => Task, (task) => task.user, { eager: true })
+  tasks: Task[];
 
   async comparePassword(
     candidatePassword: string,
