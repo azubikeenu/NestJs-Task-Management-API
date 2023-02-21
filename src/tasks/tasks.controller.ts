@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from './task-status.enum';
@@ -18,7 +19,9 @@ import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatusValidationPipe } from './pipes/tast-status-validation.pipe';
 import { GetFilteredTaskDto } from './dto/get-filtered-task.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard())
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
@@ -45,7 +48,6 @@ export class TasksController {
   @Delete('/:id')
   deleteTask(@Param('id', ParseIntPipe) id: number) {
     this.taskService.deleteTask(id);
-    console.log('Task deleted');
   }
 
   @Patch('/:id/status')

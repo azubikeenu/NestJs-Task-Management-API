@@ -1,9 +1,11 @@
+import * as bcrypt from 'bcryptjs';
 import {
   BaseEntity,
   Column,
   Entity,
   PrimaryGeneratedColumn,
   Unique,
+  BeforeInsert,
 } from 'typeorm';
 
 @Entity()
@@ -15,4 +17,18 @@ export class User extends BaseEntity {
   username: string;
   @Column()
   password: string;
+
+  async comparePassword(
+    candidatePassword: string,
+    userPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(candidatePassword, userPassword);
+  }
+
+  @BeforeInsert()
+  async hashpassword() {
+    if (!this.id) {
+      this.password = await bcrypt.hash(this.password, 12);
+    }
+  }
 }

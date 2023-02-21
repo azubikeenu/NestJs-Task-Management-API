@@ -27,4 +27,13 @@ export class UserRepository extends Repository<User> {
       }
     }
   }
+
+  async validatePassword({ username, password }: AuthCredentialsDto) {
+    const user = await this.findOneBy({ username });
+    if (user && (await user.comparePassword(password, user.password))) {
+      return user.username;
+    } else {
+      return null;
+    }
+  }
 }
