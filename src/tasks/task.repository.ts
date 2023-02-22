@@ -1,11 +1,16 @@
 import { Repository, DataSource } from 'typeorm';
 import { Task } from './task.entity';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { GetFilteredTaskDto } from './dto/get-filtered-task.dto';
 import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TaskRepository extends Repository<Task> {
+  private readonly logger = new Logger('TaskRepository');
   constructor(dataSource: DataSource) {
     super(Task, dataSource.createEntityManager());
   }
@@ -26,7 +31,14 @@ export class TaskRepository extends Repository<Task> {
       );
     }
 
-    const tasks = await query.getMany();
-    return tasks;
+    try {
+      const tasks = await query.getMany();
+      return tasks;
+    } catch (err) {
+      this.logger.error(err?.stack);
+      throw new InternalServerErrorException(
+        `failed to perform query operation`,
+      );
+    }
   }
 }

@@ -1,10 +1,12 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Task } from '../src/tasks/task.entity';
-import { User } from '../src/auth/user.entity';
+import { Task } from '../tasks/task.entity';
+import { User } from '../auth/user.entity';
+import * as config from 'config';
+
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
-  port: 5431,
+  port: config.get<number>('db.port'),
   username: 'admin',
   password: 'userpass',
   database: 'taskmanagement',

@@ -12,6 +12,7 @@ import {
   ValidationPipe,
   ParseIntPipe,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from './task-status.enum';
@@ -29,6 +30,7 @@ import { TaskDto } from './dto/response/task.dto';
 @Serialize(TaskDto)
 @Controller('tasks')
 export class TasksController {
+  private readonly Logger = new Logger('TaskController');
   constructor(private readonly taskService: TasksService) {}
 
   @Get()
@@ -59,6 +61,7 @@ export class TasksController {
   @HttpCode(204)
   @Delete('/:id')
   deleteTask(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
+    Logger.log('Deleting task');
     return this.taskService.deleteTask(id, user);
   }
 

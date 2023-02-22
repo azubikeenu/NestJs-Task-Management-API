@@ -2,6 +2,8 @@
 /dist
 /node_modules
 /docker-volume
+/config/development.yml
+/config/production.yml
 
 # Logs
 logs
