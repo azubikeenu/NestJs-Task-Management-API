@@ -5,7 +5,7 @@ import * as config from 'config';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: 'localhost',
+  host: '127.0.0.1',
   port: config.get<number>('db.port'),
   username: 'admin',
   password: 'userpass',

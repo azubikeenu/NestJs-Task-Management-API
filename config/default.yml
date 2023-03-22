@@ -3,7 +3,7 @@ server:
 
 db:
   type: 'postgres'
-  port: 5431
+  port: 5432
   database: 'taskmanagement'
 
 jwt:

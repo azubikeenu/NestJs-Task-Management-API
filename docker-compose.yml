@@ -10,7 +10,7 @@ services:
     volumes:
       - ./docker-volume/db:/var/lib/postgresql/data
     ports:
-      - 5431:5432
+      - 5432:5432
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
