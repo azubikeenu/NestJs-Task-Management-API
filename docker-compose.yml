@@ -17,6 +17,7 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@richard.com
       - PGADMIN_DEFAULT_PASSWORD=admin
+      
     volumes:
       - ./docker-volume/pgadmin:/var/lib/pgadmin
     ports:

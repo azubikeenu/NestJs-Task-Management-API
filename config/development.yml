@@ -2,8 +2,8 @@ db:
   type: 'postgres'
   host: 'localhost'
   password: 'userpass'
-  username : 'admin'
-  synchronize : true
+  username: 'admin'
+  synchronize: true
 
 jwt:
- secret : 'thisIsMyLittleSecret'
+  secret: 'thisIsMyLittleSecret'
