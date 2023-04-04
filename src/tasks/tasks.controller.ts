@@ -23,11 +23,7 @@ import { GetFilteredTaskDto } from './dto/get-filtered-task.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/auth/user.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { Serialize } from '../../interceptors/serialize.interceptor';
-import { TaskDto } from './dto/response/task.dto';
-
 @UseGuards(AuthGuard())
-@Serialize(TaskDto)
 @Controller('tasks')
 export class TasksController {
   private readonly Logger = new Logger('TaskController');
