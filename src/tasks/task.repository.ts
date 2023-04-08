@@ -6,7 +6,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { GetFilteredTaskDto } from './dto/get-filtered-task.dto';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Injectable()
 export class TaskRepository extends Repository<Task> {
@@ -15,6 +16,18 @@ export class TaskRepository extends Repository<Task> {
     super(Task, dataSource.createEntityManager());
   }
 
+  async createTask(
+    { title, description }: CreateTaskDto,
+    user: User,
+  ): Promise<Task> {
+    const task = this.create({
+      title,
+      description,
+      userId: user.id,
+    });
+    const savedTask = await this.save(task);
+    return savedTask;
+  }
   async getAllTasks(
     { searchTerm, status }: GetFilteredTaskDto,
     user: User,

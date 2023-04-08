@@ -4,13 +4,14 @@ import { JwtPayload } from 'jsonwebtoken';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
+import * as config from 'config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly userRepository: UserRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'thisIsMyLittleSecret',
+      secretOrKey: process.env.JWT_SECRET || config.get('jwt.secret'),
     });
   }
   async validate(payload: JwtPayload): Promise<User> {

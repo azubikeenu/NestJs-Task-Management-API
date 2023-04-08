@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { Task } from 'src/tasks/task.entity';
+import { Task } from '../tasks/task.entity';
 import {
   BaseEntity,
   Column,
@@ -12,7 +12,7 @@ import {
 
 @Entity()
 @Unique(['username'])
-export class User extends BaseEntity {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()

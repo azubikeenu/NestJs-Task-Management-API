@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async signUp(authCredentials: AuthCredentialsDto) {
-    const user = await this.userRepository.saveUser(authCredentials);
+    const user = await this.userRepository.signUp(authCredentials);
     return user;
   }
 

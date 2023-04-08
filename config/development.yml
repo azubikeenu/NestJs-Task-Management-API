@@ -1,6 +1,6 @@
+## In the dev environment the default.yml gets merged with this file 
 db:
-  type: 'postgres'
-  host: 'localhost'
+  host: '127.0.0.1'
   password: 'userpass'
   username: 'admin'
   synchronize: true

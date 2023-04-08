@@ -10,28 +10,29 @@ import { User } from 'src/auth/user.entity';
 export class TasksService {
   constructor(private readonly taskRepository: TaskRepository) {}
 
-  getTasks(filteredTask: GetFilteredTaskDto, user: User): Promise<Task[]> {
-    return this.taskRepository.getAllTasks(filteredTask, user);
+  async getTasks(filterDto: GetFilteredTaskDto, user: User): Promise<Task[]> {
+    return await this.taskRepository.getAllTasks(filterDto, user);
   }
 
-  async createTask(creatTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    const task = this.taskRepository.create(creatTaskDto);
-    task.user = user;
-    task.status = TaskStatus.OPEN;
-    return await this.taskRepository.save(task);
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+    return await this.taskRepository.createTask(createTaskDto, user);
   }
 
   async getTaskById(id: number, user: User): Promise<Task> {
-    const [task] = await this.taskRepository.find({
-      where: { id, userId: user.id },
-    });
+    const task = await this.taskRepository.findOneBy({ id, userId: user.id });
     if (!task) throw new NotFoundException(`Task with id ${id} not found`);
     return task;
   }
-  async deleteTask(id: number, user: User): Promise<void> {
-    const result = await this.taskRepository.delete({ id, userId: user.id });
-    if (result.affected === 0)
-      throw new NotFoundException(`Task with id ${id} not found`);
+
+  async deleteTask(id: number, user: User) {
+    const { affected } = await this.taskRepository.delete({
+      id,
+      userId: user.id,
+    });
+    if (affected === 0)
+      throw new NotFoundException(
+        `Could not delete! Task with id ${id} not found `,
+      );
   }
 
   async updateStatus(
@@ -39,9 +40,8 @@ export class TasksService {
     status: TaskStatus,
     user: User,
   ): Promise<Task> {
-    const task = await this.getTaskById(id, user);
-    task.status = status;
-    await task.save();
-    return task;
+    const foundTask = await this.getTaskById(id, user);
+    const updatedTask = { ...foundTask, status };
+    return await this.taskRepository.save(updatedTask);
   }
 }

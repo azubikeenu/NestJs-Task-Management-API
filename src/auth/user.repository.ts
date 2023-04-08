@@ -15,20 +15,16 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-  async saveUser(authCredentials: AuthCredentialsDto) {
-    const user = new User();
-    user.password = authCredentials.password;
-    user.username = authCredentials.username;
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    const { username, password } = authCredentialsDto;
+    const user = this.create({ username, password });
     try {
-      await user.save();
-    } catch (err) {
-      if ((err.code = '23505')) {
+      await this.save(user);
+    } catch (error) {
+      if ((error.code = '23505')) {
         throw new ConflictException('username already exists');
       } else {
-        this.logger.error(err?.stack);
-        throw new InternalServerErrorException(
-          'failed to persist user to the database',
-        );
+        throw new InternalServerErrorException('Something wrong happened');
       }
     }
   }

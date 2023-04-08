@@ -1,3 +1,5 @@
+## this is a shared configuration file for all environments 
+
 server:
   port: 3000
 

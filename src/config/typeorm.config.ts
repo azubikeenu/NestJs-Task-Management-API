@@ -5,11 +5,12 @@ import * as config from 'config';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: '127.0.0.1',
-  port: config.get<number>('db.port'),
-  username: 'admin',
-  password: 'userpass',
-  database: 'taskmanagement',
+  host: process.env.DB_HOST || config.get<string>('db.host'),
+  port: Number(process.env.DB_PORT) || config.get<number>('db.port'),
+  username: process.env.DB_USERNAME || config.get('db.username'),
+  password: process.env.DB_PASSWORD || config.get('db.password'),
+  database: process.env.DB_DATABASE_NAME || config.get('db.database'),
   entities: [Task, User],
-  synchronize: true,
+  synchronize:
+    Boolean(process.env.DB_TYPE_ORM_SYNC) || config.get('db.synchronize'),
 };
