@@ -57,7 +57,7 @@ export class TasksController {
   @HttpCode(204)
   @Delete('/:id')
   deleteTask(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
-    Logger.log('Deleting task');
+    this.Logger.log('Deleting task');
     return this.taskService.deleteTask(id, user);
   }
 

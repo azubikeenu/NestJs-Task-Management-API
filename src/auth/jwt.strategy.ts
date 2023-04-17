@@ -18,6 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const { username } = payload;
     const user = await this.userRepository.findOneBy({ username });
     if (!user) throw new UnauthorizedException('Invalid Credentials');
+    // this adds the current user to the request object ==> req.user
     return user;
   }
 }

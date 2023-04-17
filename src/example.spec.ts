@@ -1,3 +1,9 @@
+/***
+ * This is just an example test file
+ * to brush up knowledge on jest testing
+ * evn
+ */
+
 class FriendList {
   friends: string[] = [];
 
@@ -7,6 +13,10 @@ class FriendList {
   }
   annouceNewFriend(name: string): void {
     global.console.log(`Hello ${name}`);
+  }
+
+  getFriends(): string[] {
+    return this.friends;
   }
 
   removeFriend(name: string): void {
@@ -33,6 +43,8 @@ describe('FriendList', () => {
   it(`Should add a new friend to the friendList`, () => {
     friendList.addFriends('richard');
     expect(friendList.friends.length).toEqual(1);
+    const friends = friendList.getFriends();
+    expect(friends).toContain('richard');
   });
 
   it(`Should annouce a new friend anytime a friend is added`, () => {
