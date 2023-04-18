@@ -113,7 +113,9 @@ describe('Task Service', () => {
 
     it(`Should throw an exception when task is not found in the database`, () => {
       taskRepository.delete.mockResolvedValue({ affected: 0 });
-      expect(taskService.deleteTask(1, mockUser)).rejects.toThrow();
+      expect(taskService.deleteTask(1, mockUser)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -140,9 +142,9 @@ describe('Task Service', () => {
       const newStatus: TaskStatus = TaskStatus.DONE;
       taskRepository.findOneBy.mockResolvedValue(null);
       expect(taskRepository.save).toBeCalledTimes(0);
-      expect(
-        taskService.updateStatus(1, newStatus, mockUser),
-      ).rejects.toThrow();
+      expect(taskService.updateStatus(1, newStatus, mockUser)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });
