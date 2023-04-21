@@ -1,4 +1,4 @@
-import { User } from './auth/user.entity';
+import { User } from './user.entity';
 describe(`UserEntity`, () => {
   let user: User;
   beforeEach(() => {

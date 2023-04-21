@@ -8,7 +8,10 @@ import {
   Unique,
   BeforeInsert,
   OneToMany,
+  AfterLoad,
+  BeforeUpdate,
 } from 'typeorm';
+import { InternalServerErrorException } from '@nestjs/common';
 
 @Entity()
 @Unique(['username'])
@@ -20,6 +23,8 @@ export class User {
   @Column()
   password: string;
 
+  private initialPassword: string;
+
   @OneToMany(() => Task, (task) => task.user, { eager: true })
   tasks: Task[];
 
@@ -30,10 +35,22 @@ export class User {
     return await bcrypt.compare(candidatePassword, userPassword);
   }
 
+  @AfterLoad()
+  getInitialPassword() {
+    this.initialPassword = this.password;
+  }
+
   @BeforeInsert()
+  @BeforeUpdate()
   async hashpassword(): Promise<void> {
-    if (!this.id) {
-      this.password = await bcrypt.hash(this.password, 12);
+    try {
+      if (this.password !== this.initialPassword) {
+        this.password = await bcrypt.hash(this.password, 12);
+      }
+    } catch (ex) {
+      throw new InternalServerErrorException(
+        `Couldn't perform hashing operation`,
+      );
     }
   }
 }
